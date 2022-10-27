@@ -41,6 +41,8 @@
               console
               effect
               prelude
+
+              # electron lib
               yoga-json
               web-events
               untagged-union
@@ -48,6 +50,11 @@
               aff
               aff-promise
               node-buffer
+
+              # renderer stuff
+              web-html
+              react-basic-hooks
+              react-basic-dom
             ];
 
             dir = filteredSrc;

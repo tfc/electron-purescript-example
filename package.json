@@ -26,6 +26,8 @@
   "homepage": "https://github.com/tfc/electron-purescript-example#readme",
   "dependencies": {
     "big-integer": "^1.6.51",
-    "esbuild": "^0.15.12"
+    "esbuild": "^0.15.12",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }

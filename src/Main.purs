@@ -28,20 +28,15 @@ mkOptions = ado
   in
     { width: 800
     , height: 600
-    , backgroundColor: "#000000"
+    , backgroundColor: "white"
     , show: false
     , webPreferences:
-        { preload: Path.concat [ dirName, "..", "preload.js" ]
+        { preload: Path.concat [ dirName, "preload.js" ]
         , nodeIntegration: true
         , enableRemoteModule: true
         , contextIsolation: true
-        , sandbox: false
+        , sandbox: true
         , nodeIntegrationInWorker: true
-        -- , nodeIntegration: false
-        -- , enableRemoteModule: true
-        -- , contextIsolation: true
-        -- , sandbox: true
-        -- , nodeIntegrationInWorker: false
         , worldSafeExecuteJavaScript: true
         }
     }
