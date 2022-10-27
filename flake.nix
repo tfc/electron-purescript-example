@@ -74,7 +74,7 @@
                          --development
               '';
             in
-              (import drv { inherit pkgs; inherit (pkgs) nodejs; }).nodeDependencies;
+            (import drv { inherit pkgs; inherit (pkgs) nodejs; }).nodeDependencies;
         in
         {
           devShells.default = pkgs.mkShell {
@@ -103,11 +103,21 @@
                 export PATH="${nodeDependencies}/bin:$PATH"
 
                 npm run build
+                eval "$postBuild"
               '';
               installPhase = ''
                 cp -r dist $out
               '';
             };
+            asar = config.packages.bundle.overrideAttrs (_: {
+              name = "electron-purescript-example.asar";
+              postBuild = ''
+                npx asar pack dist app.asar
+              '';
+              installPhase = ''
+                cp app.asar $out
+              '';
+            });
             electron-purescript-example = pkgs.writeShellApplication {
               name = "electron-purescript-example";
               runtimeInputs = [ pkgs.electron ];
