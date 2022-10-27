@@ -4,6 +4,7 @@
   "description": "A minimal example Electron app, written in Purescript.",
   "main": "src/entry.js",
   "scripts": {
+    "esbuild": "node build.mjs"
   },
   "repository": {
     "type": "git",
@@ -22,5 +23,9 @@
   "bugs": {
     "url": "https://github.com/tfc/electron-purescript-example/issues"
   },
-  "homepage": "https://github.com/tfc/electron-purescript-example#readme"
+  "homepage": "https://github.com/tfc/electron-purescript-example#readme",
+  "dependencies": {
+    "big-integer": "^1.6.51",
+    "esbuild": "^0.15.12"
+  }
 }
