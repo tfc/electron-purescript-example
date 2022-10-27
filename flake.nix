@@ -41,6 +41,13 @@
               console
               effect
               prelude
+              yoga-json
+              web-events
+              untagged-union
+              node-path
+              aff
+              aff-promise
+              node-buffer
             ];
 
             dir = filteredSrc;
