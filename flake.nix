@@ -4,10 +4,6 @@
   inputs = {
     flake-parts.url = "github:hercules-ci/flake-parts";
     nixpkgs.url = "github:nixos/nixpkgs";
-    npmlock2nix-src = {
-      flake = false;
-      url = "github:nix-community/npmlock2nix";
-    };
     pre-commit-hooks = {
       url = "github:tfc/pre-commit-hooks.nix?ref=purs-tidy";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -19,7 +15,6 @@
     { self
     , flake-parts
     , nixpkgs
-    , npmlock2nix-src
     , pre-commit-hooks
     , purs-nix-input
     }:
@@ -28,12 +23,12 @@
       perSystem = { config, self', inputs', pkgs, system, ... }:
         let
           purs-nix = purs-nix-input { inherit system; };
-          npmlock2nix = import npmlock2nix-src { inherit pkgs; };
 
           filteredSrc = pkgs.lib.sourceByRegex ./. [
             "^src.*"
             "^package.json$"
             "^package-lock.json$"
+            "^build.mjs$"
           ];
 
           ps = purs-nix.purs {
@@ -59,6 +54,27 @@
 
             dir = filteredSrc;
           };
+
+          ps-command = ps.command {
+            bundle.esbuild = {
+              outfile = "bundle.js";
+              minify = true;
+            };
+          };
+
+          nodeDependencies =
+            let
+              env = { nativeBuildInputs = [ pkgs.node2nix ]; };
+              drv = pkgs.runCommand "node-dependencies" env ''
+                mkdir $out
+                cd $out
+                node2nix --input ${filteredSrc}/package.json \
+                         --lock ${filteredSrc}/package-lock.json \
+                         --nodejs-18 \
+                         --development
+              '';
+            in
+              (import drv { inherit pkgs; inherit (pkgs) nodejs; }).nodeDependencies;
         in
         {
           devShells.default = pkgs.mkShell {
@@ -66,15 +82,45 @@
               ${config.checks.pre-commit-check.shellHook}
             '';
             nativeBuildInputs = with pkgs; [
-              (ps.command { })
-              nodejs
               electron
+              node2nix
+              nodejs
+              ps-command
             ];
           };
 
           packages = {
-            default = config.packages.bundle;
-            inherit (ps) bundle;
+            default = config.packages.electron-purescript-example;
+            bundle = pkgs.stdenv.mkDerivation {
+              name = "electron-purescript-example-bundle";
+              src = filteredSrc;
+              nativeBuildInputs = with pkgs; [
+                nodejs
+                ps-command
+              ];
+              buildPhase = ''
+                ln -s ${nodeDependencies}/lib/node_modules ./node_modules
+                export PATH="${nodeDependencies}/bin:$PATH"
+
+                npm run build
+              '';
+              installPhase = ''
+                cp -r dist $out
+              '';
+            };
+            electron-purescript-example = pkgs.writeShellApplication {
+              name = "electron-purescript-example";
+              runtimeInputs = [ pkgs.electron ];
+              text = "electron ${config.packages.bundle}";
+            };
+          };
+
+          apps = {
+            default = config.apps.electron-purescript-example;
+            electron-purescript-example = {
+              type = "app";
+              program = "${config.packages.electron-purescript-example}/bin/electron-purescript-example";
+            };
           };
 
           checks = {

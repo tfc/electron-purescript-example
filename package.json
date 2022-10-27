@@ -4,6 +4,8 @@
   "description": "A minimal example Electron app, written in Purescript.",
   "main": "src/entry.js",
   "scripts": {
+    "build": "npm run purescript && npm run esbuild",
+    "purescript": "purs-nix compile",
     "esbuild": "node build.mjs"
   },
   "repository": {

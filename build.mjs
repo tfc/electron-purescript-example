@@ -1,13 +1,13 @@
 import esbuild from "esbuild"
 import path from "path";
 import { fileURLToPath } from 'url';
-import { cpSync, mkdirSync, rmSync, writeFileSync } from "fs"
+import * as fs from "node:fs"
 
-rmSync("dist", { recursive: true, force: true })
-mkdirSync("dist")
+fs.rmSync("dist", { recursive: true, force: true })
+fs.mkdirSync("dist")
 
-writeFileSync("dist/package.json", JSON.stringify({ main: "main.js" }))
-cpSync("src/index.html", "dist/index.html")
+fs.writeFileSync("dist/package.json", JSON.stringify({ main: "main.js" }))
+fs.cpSync("src/index.html", "dist/index.html")
 
 function build(opts) {
   esbuild.build(opts).then((result) => {
