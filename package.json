@@ -1,0 +1,26 @@
+{
+  "name": "electron-purescript-example",
+  "version": "1.0.0",
+  "description": "A minimal example Electron app, written in Purescript.",
+  "main": "src/entry.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tfc/electron-purescript-example.git"
+  },
+  "keywords": [
+    "purescript",
+    "electron",
+    "nix",
+    "flake",
+    "purs-nix",
+    "esbuild"
+  ],
+  "author": "Jacek Galowicz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tfc/electron-purescript-example/issues"
+  },
+  "homepage": "https://github.com/tfc/electron-purescript-example#readme"
+}
