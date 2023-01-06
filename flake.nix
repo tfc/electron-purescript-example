@@ -101,6 +101,9 @@
               buildPhase = ''
                 ln -s ${nodeDependencies}/lib/node_modules ./node_modules
                 export PATH="${nodeDependencies}/bin:$PATH"
+                # on darwin, npm tries to create some log files in $HOME/...
+                # but not on linux, which is strange...
+                export HOME=$PWD
 
                 npm run build
                 eval "$postBuild"
