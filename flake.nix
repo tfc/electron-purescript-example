@@ -19,7 +19,7 @@
     , purs-nix-input
     }:
     flake-parts.lib.mkFlake { inherit self; } {
-      systems = [ "x86_64-linux" ];
+      systems = [ "x86_64-linux" "x86_64-darwin" ];
       perSystem = { config, self', inputs', pkgs, system, ... }:
         let
           purs-nix = purs-nix-input { inherit system; };
